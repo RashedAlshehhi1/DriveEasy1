@@ -1,10 +1,3 @@
-//
-//  HomeMapView.swift
-//  DriveEasy
-//
-//  Created by Rashid Alshehhi.
-//
-
 import SwiftUI
 import MapKit
 
@@ -15,9 +8,10 @@ struct VehicleLocation: Identifiable {
     let coordinate: CLLocationCoordinate2D
 }
 
-struct HomeMapView: View {
+struct HomeView: View {
     // MARK: - State Properties
-    // iOS 17+ Map Camera Position centered on Sharjah/Dubai area
+    @Binding var selectedTab: Int // Connects to MainTabView
+    
     @State private var position: MapCameraPosition = .region(MKCoordinateRegion(
         center: CLLocationCoordinate2D(latitude: 25.3463, longitude: 55.4209),
         span: MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
@@ -25,10 +19,9 @@ struct HomeMapView: View {
     
     @State private var searchText = ""
     
-    // Sample map pins
     let availableVehicles = [
-        VehicleLocation(name: "chevrolet silverado", coordinate: CLLocationCoordinate2D(latitude: 25.3463, longitude: 55.4209)),
-        VehicleLocation(name: "Nissan", coordinate: CLLocationCoordinate2D(latitude: 25.3500, longitude: 55.4100)),
+        VehicleLocation(name: "Polo", coordinate: CLLocationCoordinate2D(latitude: 25.3463, longitude: 55.4209)),
+        VehicleLocation(name: "Fiesta", coordinate: CLLocationCoordinate2D(latitude: 25.3500, longitude: 55.4100)),
         VehicleLocation(name: "Civic", coordinate: CLLocationCoordinate2D(latitude: 25.3400, longitude: 55.4300))
     ]
     
@@ -52,11 +45,8 @@ struct HomeMapView: View {
             
             // MARK: - Top Overlays (Header & Search)
             VStack {
-                // Custom Navigation Bar
                 HStack {
-                    Button(action: {
-                        // Menu action
-                    }) {
+                    Button(action: {}) {
                         Image(systemName: "line.3.horizontal")
                             .font(.title2)
                             .foregroundColor(.primary)
@@ -65,9 +55,7 @@ struct HomeMapView: View {
                     Text("DriveEasy")
                         .font(.headline)
                     Spacer()
-                    Button(action: {
-                        // Notifications action
-                    }) {
+                    Button(action: {}) {
                         Image(systemName: "bell")
                             .font(.title2)
                             .foregroundColor(.primary)
@@ -76,7 +64,6 @@ struct HomeMapView: View {
                 .padding(.horizontal)
                 .padding(.top, 10)
                 
-                // Search & Filter Bar
                 HStack {
                     HStack {
                         Image(systemName: "magnifyingglass")
@@ -88,9 +75,7 @@ struct HomeMapView: View {
                     .cornerRadius(8)
                     .shadow(color: .black.opacity(0.1), radius: 5, x: 0, y: 2)
                     
-                    Button(action: {
-                        // Filter action
-                    }) {
+                    Button(action: {}) {
                         Image(systemName: "slider.horizontal.3")
                             .padding(10)
                             .background(Color(UIColor.systemBackground))
@@ -107,9 +92,7 @@ struct HomeMapView: View {
             
             // MARK: - Bottom Vehicle Preview Card & Tab Bar
             VStack(spacing: 0) {
-                // Vehicle Quick Preview
                 HStack(alignment: .center, spacing: 15) {
-                    // Placeholder for vehicle image
                     Rectangle()
                         .fill(Color.gray.opacity(0.3))
                         .frame(width: 100, height: 70)
@@ -142,9 +125,7 @@ struct HomeMapView: View {
                     
                     Spacer()
                     
-                    Button(action: {
-                        // Action to navigate to details or checkout
-                    }) {
+                    Button(action: {}) {
                         Text("Book")
                             .font(.subheadline)
                             .fontWeight(.bold)
@@ -162,16 +143,24 @@ struct HomeMapView: View {
                 .padding(.horizontal)
                 .padding(.bottom, 20)
                 
-                // MARK: - Mock Tab Bar
+                // MARK: - Active Tab Bar
                 Divider()
                 HStack {
-                    TabBarIcon(iconName: "house.fill", label: "Home", isActive: true)
+                    Button(action: { selectedTab = 0 }) {
+                        TabBarIcon(iconName: "house.fill", label: "Home", isActive: selectedTab == 0)
+                    }
                     Spacer()
-                    TabBarIcon(iconName: "list.bullet.rectangle.portrait", label: "Bookings", isActive: false)
+                    Button(action: { selectedTab = 1 }) {
+                        TabBarIcon(iconName: "list.bullet.rectangle.portrait", label: "Catalog", isActive: selectedTab == 1)
+                    }
                     Spacer()
-                    TabBarIcon(iconName: "magnifyingglass", label: "Search", isActive: false)
+                    Button(action: {}) {
+                        TabBarIcon(iconName: "magnifyingglass", label: "Search", isActive: false)
+                    }
                     Spacer()
-                    TabBarIcon(iconName: "person", label: "Profile", isActive: false)
+                    Button(action: {}) {
+                        TabBarIcon(iconName: "person", label: "Profile", isActive: false)
+                    }
                 }
                 .padding(.horizontal, 30)
                 .padding(.top, 10)
@@ -183,6 +172,7 @@ struct HomeMapView: View {
 }
 
 // MARK: - Helper View for Tab Bar Icons
+// (If you get an "invalid redeclaration" error, you can delete this helper from one of your files, as Xcode shares them project-wide)
 struct TabBarIcon: View {
     let iconName: String
     let label: String
@@ -200,9 +190,8 @@ struct TabBarIcon: View {
     }
 }
 
-// MARK: - Preview
-struct HomeMapView_Previews: PreviewProvider {
+struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeMapView()
+        HomeView(selectedTab: .constant(0))
     }
 }

@@ -1,13 +1,9 @@
-//
-//  LoginView.swift
-//  DriveEasy
-//
-//  Created by Rashid Alshehhi.
-//
-
 import SwiftUI
 
 struct LoginView: View {
+    // This connects the view back to the router to dismiss the login screen
+    @Binding var isLoggedIn: Bool
+    
     // State properties for input fields
     @State private var email = ""
     @State private var password = ""
@@ -82,8 +78,8 @@ struct LoginView: View {
             VStack(spacing: 16) {
                 // Login Button
                 Button(action: {
-                    // Trigger login action
-                    print("Login tapped")
+                    // This changes the state in ContentView and takes you to the Map/Catalog
+                    isLoggedIn = true
                 }) {
                     Text("Login")
                         .font(.headline)
@@ -96,8 +92,7 @@ struct LoginView: View {
                 
                 // Register Button
                 Button(action: {
-                    // Trigger navigation to registration
-                    print("Register tapped")
+                    // Action for register
                 }) {
                     Text("Register")
                         .font(.headline)
@@ -115,9 +110,9 @@ struct LoginView: View {
             .padding(.horizontal, 30)
             .padding(.top, 10)
             
-            // Forgot Password / Bottom Link
+            // Forgot Password Link
             Button(action: {
-                print("Forgot password tapped")
+                // Action for forgot password
             }) {
                 Text("Forgot Password?")
                     .font(.footnote)
@@ -130,8 +125,10 @@ struct LoginView: View {
     }
 }
 
+// MARK: - Preview
 struct LoginView_Previews: PreviewProvider {
     static var previews: some View {
-        LoginView()
+        // Pass a dummy constant for the preview to work
+        LoginView(isLoggedIn: .constant(false))
     }
 }
